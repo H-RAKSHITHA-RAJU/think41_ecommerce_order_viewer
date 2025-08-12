@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Details for Order #{{ order.id }}</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .item-table { width: 100%; border-collapse: collapse; margin-top: 1em; }
+        .item-table th, .item-table td { border: 1px solid #ccc; padding: 0.8em; text-align: left; }
+        .item-table th { background-color: #f4f4f4; }
+        .back-link { margin-top: 2em; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- We use order.user.name to access the user related to the order -->
+        <h1>Details for Order #{{ order.id }}</h1>
+        <p>Belongs to: {{ order.user.name }}</p>
+        <p>Placed on: {{ order.orderDate|date:"F j, Y, P" }}</p>
+
+        <hr>
+
+        <h3>Items in this Order</h3>
+        {% if items %}
+            <table class="item-table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <!-- We access the product's name via the foreign key relationship -->
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ item.price|floatformat:2 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>There are no items listed for this order.</p>
+        {% endif %}
+
+        <!-- This link goes back to the order list for the user who owns this order -->
+        <a class="back-link" href="{% url 'user_orders' order.user.id %}">← Back to {{ order.user.name }}'s Orders</a>
+    </div>
+
+</body>
+</html>

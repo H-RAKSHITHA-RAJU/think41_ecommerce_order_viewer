@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders for {{ user.name }}</title>
+    <!-- Reusing the same simple styling -->
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .results-list li { list-style: none; margin: 0.5em 0; padding: 0.5em; border: 1px solid #ccc; border-radius: 4px; }
+        .results-list a { text-decoration: none; color: #0056b3; }
+        .back-link { margin-top: 2em; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Orders for {{ user.name }}</h1>
+        <p>Email: {{ user.email }}</p>
+        <p>User ID: {{ user.id }}</p>
+
+        <hr>
+
+        <h3>Order History</h3>
+        {% if orders %}
+            <ul class="results-list">
+                {% for order in orders %}
+                    <li>
+                        <!-- Link to the order_items view for this specific order -->
+                        <a href="{% url 'order_items' order.id %}">
+                            Order #{{ order.id }} - Placed on: {{ order.orderDate|date:"F j, Y" }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>This user has no orders.</p>
+        {% endif %}
+
+        <a class="back-link" href="{% url 'user_search' %}">← Back to Search</a>
+    </div>
+
+</body>
+</html>
