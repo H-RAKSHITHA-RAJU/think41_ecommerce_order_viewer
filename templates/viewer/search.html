@@ -1,51 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User Search</title>
-    <!-- Simple styling for better presentation -->
-    <style>
-        body { font-family: sans-serif; margin: 2em; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .search-form { margin-bottom: 2em; }
-        .results-list li { list-style: none; margin: 0.5em 0; padding: 0.5em; border: 1px solid #ccc; border-radius: 4px; }
-        .results-list a { text-decoration: none; color: #0056b3; }
-    </style>
-</head>
-<body>
+{% extends 'viewer/base.html' %}
 
-    <div class="container">
-        <h1>eCommerce Order Viewer</h1>
+{% block title %}User Search{% endblock %}
 
-        <div class="search-form">
-            <h2>Search for a User</h2>
-            <form action="{% url 'user_search' %}" method="get">
-                <input type="text" name="q" placeholder="Enter user's name" value="{{ query|default:'' }}">
-                <button type="submit">Search</button>
-            </form>
-        </div>
+{% block content %}
+    <h1>Search for a User</h1>
+    <form action="{% url 'user_search' %}" method="get">
+        <input type="text" name="q" placeholder="Enter user's name" value="{{ query|default:'' }}" style="padding: 0.5em; width: 300px; border: 1px solid #ccc; border-radius: 4px;">
+        <button type="submit" style="padding: 0.5em 1em;">Search</button>
+    </form>
 
+    {% if users is not None %}
         <hr>
-
-        {% if users is not None %}
-            <h3>Search Results</h3>
-            {% if users %}
-                <ul class="results-list">
-                    {% for user in users %}
-                        <li>
-                            <!-- Link to the user_orders view for this specific user -->
-                            <a href="{% url 'user_orders' user.id %}">
-                                {{ user.name }} ({{ user.email }})
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No users found matching your query.</p>
-            {% endif %}
+        <h3>Search Results for "{{ query }}"</h3>
+        {% if users %}
+            <ul class="results-list">
+                {% for user in users %}
+                    <li>
+                        <a href="{% url 'user_orders' user.id %}">
+                            {{ user.name }} ({{ user.email }})
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No users found matching your query.</p>
         {% endif %}
-
-    </div>
-
-</body>
-</html>
+    {% endif %}
+{% endblock %}
